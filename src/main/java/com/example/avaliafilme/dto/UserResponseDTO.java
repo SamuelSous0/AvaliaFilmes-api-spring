@@ -1,0 +1,18 @@
+package com.example.avaliafilme.dto;
+
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.Setter;
+
+import java.time.LocalDateTime;
+
+@Getter
+@Setter
+@AllArgsConstructor
+public class UserResponseDTO {
+
+    private long id;
+    private String name;
+    private String email;
+    private LocalDateTime dt_create;
+}
