@@ -9,7 +9,6 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 public class UserService {
@@ -18,91 +17,123 @@ public class UserService {
     userRepository userRepository;
 
     public UserResponseDTO addUser(UserRequestDTO user) {
+        if (user.getName() == null || user.getName().isBlank()) {
+            throw new IllegalArgumentException("O nome do usuário não pode ser vazio.");
+        }
+        if (user.getEmail() == null || user.getEmail().isBlank()) {
+            throw new IllegalArgumentException("O e-mail não pode ser vazio.");
+        }
+        if (user.getPassword() == null || user.getPassword().length() < 6) {
+            throw new IllegalArgumentException("A senha deve ter pelo menos 6 caracteres.");
+        }
 
-        userModel newUser = new userModel();
+        try {
+            userModel newUser = new userModel();
+            newUser.setUsername(user.getName());
+            newUser.setEmail(user.getEmail());
+            newUser.setPassword(user.getPassword());
+            newUser.setAge(user.getAge());
 
-        newUser.setUsername(user.getName());
-        newUser.setEmail(user.getEmail());
-        newUser.setPassword(user.getPassword());
-        newUser.setAge(user.getAge());
+            userModel userSaved = userRepository.save(newUser);
 
-        userModel userSaved = userRepository.save(newUser);
-
-        UserResponseDTO response = new UserResponseDTO(
-                userSaved.getId(),
-                userSaved.getUsername(),
-                userSaved.getEmail(),
-                userSaved.getDt_create()
-        );
-
-        return response;
+            return new UserResponseDTO(
+                    userSaved.getId(),
+                    userSaved.getUsername(),
+                    userSaved.getEmail(),
+                    userSaved.getDt_create()
+            );
+        } catch (Exception e) {
+            throw new RuntimeException("Erro ao salvar usuário: " + e.getMessage());
+        }
     }
 
     public List<UserResponseDTO> getAllUsers() {
+        try {
+            List<userModel> userList = userRepository.findAll();
+            List<UserResponseDTO> response = new ArrayList<>();
 
-        List<userModel> userList = userRepository.findAll();
-
-        List<UserResponseDTO> response = new ArrayList<UserResponseDTO>();
-
-        for (userModel user : userList) {
-
-            response.add(
-                    new UserResponseDTO(
-                            user.getId(),
-                            user.getUsername(),
-                            user.getEmail(),
-                            user.getDt_create()
-                    )
-            );
+            for (userModel u : userList) {
+                response.add(new UserResponseDTO(
+                        u.getId(),
+                        u.getUsername(),
+                        u.getEmail(),
+                        u.getDt_create()
+                ));
+            }
+            return response;
+        } catch (Exception e) {
+            throw new RuntimeException("Erro ao buscar usuários: " + e.getMessage());
         }
-
-        return response;
     }
 
     public UserResponseDTO getUserById(Long id) {
+        if (id == null || id <= 0) {
+            throw new IllegalArgumentException("O ID informado é inválido.");
+        }
 
-        userModel user = userRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Usuário não encontrado com id: " + id));
+        try {
+            userModel user = userRepository.findById(id)
+                    .orElseThrow(() -> new RuntimeException("Usuário não encontrado com id: " + id));
 
-        UserResponseDTO response = new UserResponseDTO(
-                user.getId(),
-                user.getUsername(),
-                user.getEmail(),
-                user.getDt_create()
-        );
-
-        return response;
+            return new UserResponseDTO(
+                    user.getId(),
+                    user.getUsername(),
+                    user.getEmail(),
+                    user.getDt_create()
+            );
+        } catch (RuntimeException e) {
+            throw e;
+        } catch (Exception e) {
+            throw new RuntimeException("Erro ao buscar usuário: " + e.getMessage());
+        }
     }
 
     public UserResponseDTO updateUser(Long id, UserRequestDTO data) {
+        if (id == null || id <= 0) {
+            throw new IllegalArgumentException("O ID informado é inválido.");
+        }
+        if (data.getName() == null || data.getName().isBlank()) {
+            throw new IllegalArgumentException("O nome não pode ser vazio.");
+        }
 
-        userModel user = userRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Usuário não encontrado com id: " + id));
+        try {
+            userModel user = userRepository.findById(id)
+                    .orElseThrow(() -> new RuntimeException("Usuário não encontrado com id: " + id));
 
-        user.setUsername(data.getName());
-        user.setEmail(data.getEmail());
-        user.setPassword(data.getPassword());
-        user.setAge(data.getAge());
+            user.setUsername(data.getName());
+            user.setEmail(data.getEmail());
+            user.setPassword(data.getPassword());
+            user.setAge(data.getAge());
 
-        userModel userUpdated = userRepository.save(user);
+            userModel userUpdated = userRepository.save(user);
 
-        UserResponseDTO response = new UserResponseDTO(
-                userUpdated.getId(),
-                userUpdated.getUsername(),
-                userUpdated.getEmail(),
-                userUpdated.getDt_create()
-        );
-
-        return response;
+            return new UserResponseDTO(
+                    userUpdated.getId(),
+                    userUpdated.getUsername(),
+                    userUpdated.getEmail(),
+                    userUpdated.getDt_create()
+            );
+        } catch (RuntimeException e) {
+            throw e;
+        } catch (Exception e) {
+            throw new RuntimeException("Erro ao atualizar usuário: " + e.getMessage());
+        }
     }
 
     public boolean deleteUser(Long id) {
+        if (id == null || id <= 0) {
+            throw new IllegalArgumentException("O ID informado é inválido.");
+        }
 
-        if (userRepository.existsById(id)) {
-            userRepository.deleteById(id);
-            return true;
-        } else {
-            return false;
+        try {
+            if (userRepository.existsById(id)) {
+                userRepository.deleteById(id);
+                return true;
+            } else {
+                return false;
+            }
+        } catch (Exception e) {
+            throw new RuntimeException("Erro ao deletar usuário com id " + id + ": " + e.getMessage());
         }
     }
 }
