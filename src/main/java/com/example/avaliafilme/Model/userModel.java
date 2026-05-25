@@ -12,7 +12,7 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class userModel {
+public class UserModel {
 
     @Id
     @GeneratedValue

@@ -24,5 +24,5 @@ public class PerfilModel {
 
     @OneToOne
     @JoinColumn(name = "user_id", referencedColumnName = "id", nullable = false)
-    private userModel user;
+    private UserModel user;
 }

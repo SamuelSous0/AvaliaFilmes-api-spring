@@ -6,9 +6,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.example.avaliafilme.Model.PerfilModel;
-import com.example.avaliafilme.Model.userModel;
+import com.example.avaliafilme.Model.UserModel;
 import com.example.avaliafilme.Repository.PerfilRepository;
-import com.example.avaliafilme.Repository.userRepository;
+import com.example.avaliafilme.Repository.UserRepository;
 import com.example.avaliafilme.dto.PerfilRequestDTO;
 import com.example.avaliafilme.dto.PerfilResponseDTO;
 
@@ -22,11 +22,11 @@ public class PerfilService {
     private PerfilRepository perfilRepository;
 
     @Autowired
-    private userRepository userRepository;
+    private UserRepository userRepository;
 
     public PerfilResponseDTO addPerfil(PerfilRequestDTO perfilDto) {
 
-        userModel user = userRepository.findById(perfilDto.getUserId())
+        UserModel user = userRepository.findById(perfilDto.getUserId())
                 .orElseThrow(() -> new RuntimeException("Usuário não encontrado com o id: " + perfilDto.getUserId()));
 
         PerfilModel novoPerfil = new PerfilModel();

@@ -1,7 +1,7 @@
 package com.example.avaliafilme.service;
 
-import com.example.avaliafilme.Model.userModel;
-import com.example.avaliafilme.Repository.userRepository;
+import com.example.avaliafilme.Model.UserModel;
+import com.example.avaliafilme.Repository.UserRepository;
 import com.example.avaliafilme.dto.UserRequestDTO;
 import com.example.avaliafilme.dto.UserResponseDTO;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,7 +14,7 @@ import java.util.List;
 public class UserService {
 
     @Autowired
-    userRepository userRepository;
+    UserRepository userRepository;
 
     public UserResponseDTO addUser(UserRequestDTO user) {
         if (user.getName() == null || user.getName().isBlank()) {
@@ -28,13 +28,13 @@ public class UserService {
         }
 
         try {
-            userModel newUser = new userModel();
+            UserModel newUser = new UserModel();
             newUser.setUsername(user.getName());
             newUser.setEmail(user.getEmail());
             newUser.setPassword(user.getPassword());
             newUser.setAge(user.getAge());
 
-            userModel userSaved = userRepository.save(newUser);
+            UserModel userSaved = userRepository.save(newUser);
 
             return new UserResponseDTO(
                     userSaved.getId(),
@@ -49,10 +49,10 @@ public class UserService {
 
     public List<UserResponseDTO> getAllUsers() {
         try {
-            List<userModel> userList = userRepository.findAll();
+            List<UserModel> userList = userRepository.findAll();
             List<UserResponseDTO> response = new ArrayList<>();
 
-            for (userModel u : userList) {
+            for (UserModel u : userList) {
                 response.add(new UserResponseDTO(
                         u.getId(),
                         u.getUsername(),
@@ -72,7 +72,7 @@ public class UserService {
         }
 
         try {
-            userModel user = userRepository.findById(id)
+            UserModel user = userRepository.findById(id)
                     .orElseThrow(() -> new RuntimeException("Usuário não encontrado com id: " + id));
 
             return new UserResponseDTO(
@@ -97,7 +97,7 @@ public class UserService {
         }
 
         try {
-            userModel user = userRepository.findById(id)
+            UserModel user = userRepository.findById(id)
                     .orElseThrow(() -> new RuntimeException("Usuário não encontrado com id: " + id));
 
             user.setUsername(data.getName());
@@ -105,7 +105,7 @@ public class UserService {
             user.setPassword(data.getPassword());
             user.setAge(data.getAge());
 
-            userModel userUpdated = userRepository.save(user);
+            UserModel userUpdated = userRepository.save(user);
 
             return new UserResponseDTO(
                     userUpdated.getId(),
