@@ -20,7 +20,7 @@ public class ReviewModel {
     private Long id;
 
     @Column(nullable = false)
-    private double nota;
+    private Double nota;
 
     @Column(length = 1000)
     private String comentario;
