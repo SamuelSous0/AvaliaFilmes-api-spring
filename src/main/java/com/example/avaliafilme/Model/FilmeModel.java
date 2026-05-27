@@ -16,7 +16,7 @@ public class FilmeModel {
 
     @Id
     @GeneratedValue
-    private long id;
+    private Long id;
 
     @Column(nullable = false, length = 150)
     private String titulo;
