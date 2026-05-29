@@ -1,5 +1,11 @@
 package com.example.avaliafilme.controller;
 
+import com.example.avaliafilme.Model.PerfilModel;
+import com.example.avaliafilme.PostPerfilService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+
 import java.util.List;
 
 @RestController
