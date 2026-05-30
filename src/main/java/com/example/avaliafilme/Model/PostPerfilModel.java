@@ -10,6 +10,7 @@ import java.time.LocalDateTime;;
 
 @Entity
 @Table(name = "post_perfil")
+@Data
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder

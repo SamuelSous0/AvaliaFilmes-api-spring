@@ -31,7 +31,7 @@ public class PostPerfilService{
             .orElseThrow(()-> new RuntimeException("Post Perfil não encontrado"));
         
             post.setDescricao(dadosAtt.getDescricao());
-            // criar setFilme
+            post.setFilme(dadosAtt.getFilme());
             return repository.save(post);
     }
     public void deletar(Long id){
