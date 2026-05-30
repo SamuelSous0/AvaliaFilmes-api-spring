@@ -24,7 +24,7 @@ public class UserModel {
     @Column(nullable = false, unique = true, length = 150)
     private String email;
 
-    @Column(name = "senha_hash", nullable = false)
+    @Column(name = "senha", nullable = false)
     private String password;
 
     @Column(nullable = false)

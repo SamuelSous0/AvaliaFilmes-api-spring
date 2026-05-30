@@ -5,6 +5,7 @@ import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Entity
 @Table(name = "filmes")
@@ -36,4 +37,7 @@ public class FilmeModel {
     @CreationTimestamp
     @Column(name = "criado_em", updatable = false)
     private LocalDateTime dt_create;
+
+    @ManyToMany(mappedBy = "filmes")
+    private List<ListaFilmesModel> listas;
 }
