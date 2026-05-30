@@ -4,17 +4,20 @@ import com.example.avaliafilme.Model.UserModel;
 import com.example.avaliafilme.Repository.UserRepository;
 import com.example.avaliafilme.dto.UserRequestDTO;
 import com.example.avaliafilme.dto.UserResponseDTO;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
 
 @Service
+@RequiredArgsConstructor
 public class UserService {
 
-    @Autowired
-    UserRepository userRepository;
+    private final UserRepository userRepository;
+    private final PasswordEncoder passwordEncoder;
 
     public UserResponseDTO addUser(UserRequestDTO user) {
         if (user.getName() == null || user.getName().isBlank()) {
@@ -31,7 +34,7 @@ public class UserService {
             UserModel newUser = new UserModel();
             newUser.setUsername(user.getName());
             newUser.setEmail(user.getEmail());
-            newUser.setPassword(user.getPassword());
+            newUser.setPassword(passwordEncoder.encode(user.getPassword()));
             newUser.setAge(user.getAge());
 
             UserModel userSaved = userRepository.save(newUser);
@@ -135,5 +138,21 @@ public class UserService {
         } catch (Exception e) {
             throw new RuntimeException("Erro ao deletar usuário com id " + id + ": " + e.getMessage());
         }
+    }
+
+    public UserResponseDTO login(UserRequestDTO dto) {
+        UserModel user = userRepository.findByUsername(dto.getName())
+                .orElseThrow(() -> new RuntimeException("Usuário não encontrado"));
+
+        if (!passwordEncoder.matches(dto.getPassword(), user.getPassword())) {
+            throw new RuntimeException("Senha incorreta");
+        }
+
+        return new UserResponseDTO(
+                user.getId(),
+                user.getUsername(),
+                user.getEmail(),
+                user.getDt_create()
+        );
     }
 }

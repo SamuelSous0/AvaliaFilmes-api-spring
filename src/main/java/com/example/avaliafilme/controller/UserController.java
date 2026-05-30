@@ -51,4 +51,8 @@ public class UserController {
             return ResponseEntity.status(HttpStatus.NOT_FOUND);
         }
 
+        @PostMapping("/login")
+        public ResponseEntity<UserResponseDTO> login(@RequestBody UserRequestDTO dto) {
+            return ResponseEntity.ok(userService.login(dto));
+        }
     }
