@@ -19,6 +19,6 @@ public class ListaResponseDTO {
     private boolean publica;
     private String criadorUsername;
     private int quantidadeFilmes;
-    private List<String> colaboradores;  // lista de usernames
+    private List<String> colaboradores;
     private LocalDateTime criadoEm;
 }
