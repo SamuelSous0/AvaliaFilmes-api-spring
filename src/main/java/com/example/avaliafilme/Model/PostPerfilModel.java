@@ -1,5 +1,7 @@
 package com.example.avaliafilme.Model;
 
+import com.example.avaliafilme.Model.FilmeModel;
+import com.example.avaliafilme.Model.PerfilModel;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
