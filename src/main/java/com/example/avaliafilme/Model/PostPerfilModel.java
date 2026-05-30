@@ -8,12 +8,11 @@ import org.hibernate.annotations.CreationTimestamp;
 
 import java.time.LocalDateTime;;
 
-@Enity
+@Entity
 @Table(name = "post_perfil")
 @NoArgsConstructor
 @AllArgsConstructor
-@BodyBuilder
-
+@Builder
 public class PostPerfilModel{
     @Id
     @GeneratedValue

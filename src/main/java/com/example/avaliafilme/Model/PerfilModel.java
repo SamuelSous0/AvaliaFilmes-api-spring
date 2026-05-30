@@ -3,6 +3,8 @@ package com.example.avaliafilme.Model;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.util.List;
+
 @Entity
 @Table(name = "perfis")
 @Data
@@ -25,4 +27,7 @@ public class PerfilModel {
     @OneToOne
     @JoinColumn(name = "user_id", referencedColumnName = "id", nullable = false)
     private UserModel user;
+
+    @ManyToMany(mappedBy = "colaboradores")
+    private List<ListaFilmesModel> listas;
 }
