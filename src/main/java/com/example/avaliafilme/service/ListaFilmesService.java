@@ -128,4 +128,34 @@ public class ListaFilmesService {
                 .map(FilmeModel::getTitulo)
                 .toList();
     }
+
+    public ListaResponseDTO removerFilme(Long listaId, Long filmeId) {
+        ListaFilmesModel lista = listaRepository.findById(listaId)
+                .orElseThrow(() -> new RuntimeException("Lista não encontrada"));
+
+        FilmeModel filme = filmeRepository.findById(filmeId)
+                .orElseThrow(() -> new RuntimeException("Filme não encontrado"));
+
+        if (!lista.getFilmes().contains(filme)) {
+            throw new RuntimeException("Filme não está na lista");
+        }
+
+        lista.getFilmes().remove(filme);
+        return toDTO(listaRepository.save(lista));
+    }
+
+    public ListaResponseDTO removerColaborador(Long listaId, Long perfilId) {
+        ListaFilmesModel lista = listaRepository.findById(listaId)
+                .orElseThrow(() -> new RuntimeException("Lista não encontrada"));
+
+        PerfilModel perfil = perfilRepository.findById(perfilId)
+                .orElseThrow(() -> new RuntimeException("Perfil não encontrado"));
+
+        if (!lista.getColaboradores().contains(perfil)) {
+            throw new RuntimeException("Colaborador não está na lista");
+        }
+
+        lista.getColaboradores().remove(perfil);
+        return toDTO(listaRepository.save(lista));
+    }
 }
