@@ -105,7 +105,7 @@ public class UserService {
 
             user.setUsername(data.getName());
             user.setEmail(data.getEmail());
-            user.setPassword(data.getPassword());
+            user.setPassword(passwordEncoder.encode(data.getPassword()));
             user.setAge(data.getAge());
 
             UserModel userUpdated = userRepository.save(user);
