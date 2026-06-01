@@ -23,8 +23,7 @@ public class SecurityConfig {
                 .cors(cors -> cors.configurationSource(corsConfigurationSource()))
                 .csrf(csrf -> csrf.disable())
                 .authorizeHttpRequests(auth -> auth
-                        .anyRequest().permitAll()
-                );
+                        .anyRequest().permitAll());
         return http.build();
     }
 
@@ -32,10 +31,9 @@ public class SecurityConfig {
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration config = new CorsConfiguration();
         config.setAllowedOrigins(List.of(
-            "http://localhost:3000",
-            "https://scaling-goldfish-jj9qgwpv7r9rf5jpv-3000.app.github.dev",
-            "https://opulent-potato-r4j7g9pj7j7cqgx-8080.app.github.dev"
-        ));
+                "http://localhost:3000",
+                "https://supreme-space-winner-4jw5496779x4f57v-3000.app.github.dev",
+                "https://fuzzy-space-carnival-g47j9w6qqprv3vxxp-8080.app.github.dev"));
         config.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE"));
         config.setAllowedHeaders(List.of("*"));
 
