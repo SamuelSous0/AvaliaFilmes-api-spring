@@ -1,5 +1,14 @@
 package com.example.avaliafilme.service;
 
+import org.springframework.beans.factory.annotation.Value;import org.springframework.context.annotation.Bean;
+
+import com.example.avaliafilme.Model.TokenRecuperacaoModel;
+import com.example.avaliafilme.Repository.TokenRecuperacaoRepository;
+import com.example.avaliafilme.dto.RedefinirSenhaDTO;
+import com.example.avaliafilme.dto.SolicitarRecuperacaoDTO;
+import org.springframework.transaction.annotation.Transactional;
+import java.time.LocalDateTime;
+import java.util.UUID;
 import com.example.avaliafilme.Model.UserModel;
 import com.example.avaliafilme.Repository.UserRepository;
 import com.example.avaliafilme.dto.UserRequestDTO;
@@ -9,6 +18,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -154,5 +164,48 @@ public class UserService {
                 user.getEmail(),
                 user.getDt_create()
         );
-    }
+     }
+
+        private final TokenRecuperacaoRepository tokenRecuperacaoRepository;
+        private final EmailService emailService;
+
+        @Value("${app.frontend-url}")
+        private String urlFrontend;
+
+        @Transactional
+        public void solicitarRecuperacao(SolicitarRecuperacaoDTO dto) {
+            userRepository.findByEmail(dto.getEmail()).ifPresent(usuario -> {
+                tokenRecuperacaoRepository.deleteByUsuarioAndUtilizadoEmIsNull(usuario);
+
+                String codigo = UUID.randomUUID().toString();
+
+                TokenRecuperacaoModel token = new TokenRecuperacaoModel();
+                token.setUsuario(usuario);
+                token.setCodigo(codigo);
+                token.setValidoAte(LocalDateTime.now().plusMinutes(15));
+
+                tokenRecuperacaoRepository.save(token);
+
+                String link = urlFrontend + "/redefinir-senha?codigo=" + codigo;
+                emailService.enviarEmailRecuperacao(usuario.getEmail(), link);
+            });
+        }
+
+        @Transactional
+        public void redefinirSenha(RedefinirSenhaDTO dto) {
+            TokenRecuperacaoModel token = tokenRecuperacaoRepository
+                    .findByCodigoAndUtilizadoEmIsNull(dto.getCodigo())
+                    .orElseThrow(() -> new RuntimeException("Código inválido ou já utilizado."));
+
+            if (LocalDateTime.now().isAfter(token.getValidoAte())) {
+                throw new RuntimeException("Este link expirou. Solicite um novo.");
+            }
+
+            UserModel usuario = token.getUsuario();
+            usuario.setPassword(passwordEncoder.encode(dto.getNovaSenha()));
+            userRepository.save(usuario);
+
+            token.setUtilizadoEm(LocalDateTime.now());
+            tokenRecuperacaoRepository.save(token);
+        }
 }
