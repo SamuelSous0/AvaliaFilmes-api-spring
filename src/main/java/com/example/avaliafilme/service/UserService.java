@@ -190,8 +190,7 @@ public class UserService {
 
                 tokenRecuperacaoRepository.save(token);
 
-                String link = urlFrontend + "/redefinir-senha?codigo=" + codigo;
-                emailService.enviarEmailRecuperacao(usuario.getEmail(), link);
+                emailService.enviarEmailRecuperacao(usuario.getEmail(), codigo);
             });
         }
 

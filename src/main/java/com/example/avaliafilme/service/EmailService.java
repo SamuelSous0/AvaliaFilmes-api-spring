@@ -15,7 +15,7 @@ public class EmailService {
     @Value("${app.mail.from}")
     private String mailFrom;
 
-    public void enviarEmailRecuperacao(String destinatario, String link) {
+    public void enviarEmailRecuperacao(String destinatario, String codigo) {
     SimpleMailMessage mensagem = new SimpleMailMessage();
     mensagem.setFrom(mailFrom);
     mensagem.setTo(destinatario);
@@ -23,13 +23,14 @@ public class EmailService {
     mensagem.setText("""
             Olá!
             
-            Recebemos um pedido para redefinir a senha da sua conta.
-            Clique no link abaixo para continuar — ele é válido por 15 minutos:
-            
+            Seu código para redefinir a senha é:
+
             %s
+
+            O código é válido por 15 minutos.
             
             Caso não tenha feito essa solicitação, desconsidere este e-mail.
-            """.formatted(link));
+            """.formatted(codigo));
     mailSender.send(mensagem);
 }
 }
