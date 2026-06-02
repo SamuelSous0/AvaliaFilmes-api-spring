@@ -40,6 +40,10 @@ public class UserService {
             throw new IllegalArgumentException("A senha deve ter pelo menos 6 caracteres.");
         }
 
+        if (userRepository.existsByEmail(user.getEmail())) {
+        throw new RuntimeException("Este e-mail já está cadastrado.");
+        }
+
         try {
             UserModel newUser = new UserModel();
             newUser.setUsername(user.getName());
@@ -151,7 +155,7 @@ public class UserService {
     }
 
     public UserResponseDTO login(UserRequestDTO dto) {
-        UserModel user = userRepository.findByUsername(dto.getName())
+        UserModel user = userRepository.findByEmail(dto.getEmail())
                 .orElseThrow(() -> new RuntimeException("Usuário não encontrado"));
 
         if (!passwordEncoder.matches(dto.getPassword(), user.getPassword())) {
