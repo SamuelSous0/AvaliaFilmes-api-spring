@@ -1,6 +1,7 @@
 package com.example.avaliafilme.config;
 
-import org.springframework.beans.factory.annotation.Value;import org.springframework.context.annotation.Bean;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -23,6 +24,9 @@ public class SecurityConfig {
     @Value("${frontend.url.prod}")
     private String frontendUrlProd;
 
+    @Value("${frontend.url.prod2}")
+    private String frontendUrlProd2;
+
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
@@ -37,7 +41,7 @@ public class SecurityConfig {
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration config = new CorsConfiguration();
-        config.setAllowedOriginPatterns(List.of("*"));
+        config.setAllowedOrigins(List.of(frontendUrlLocal, frontendUrlProd, frontendUrlProd2));
         config.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE"));
         config.setAllowedHeaders(List.of("*"));
 
