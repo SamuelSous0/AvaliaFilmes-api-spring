@@ -1,6 +1,8 @@
 package com.example.avaliafilme.service;
 
 import com.example.avaliafilme.Model.ReacaoModel;
+import com.example.avaliafilme.Model.ReviewModel;
+import com.example.avaliafilme.Model.UserModel;
 import com.example.avaliafilme.Repository.ReacaoRepository;
 import com.example.avaliafilme.Repository.ReviewRepository;
 import com.example.avaliafilme.Repository.UserRepository;
@@ -9,6 +11,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class ReacaoService {
@@ -25,13 +28,13 @@ public class ReacaoService {
     @Transactional
     public ReacaoModel avaliar(Long userId, Long reviewId, int nota) {
         if (nota < 1 || nota > 5) {
-            throw new IllegalArgumentException("A nota deve ser entre 1 e 5.");
+            throw new IllegalArgumentException("A nota deve ser entre 1 e 5");
         }
-        var user = userRepository.findById(userId)
+        UserModel user = userRepository.findById(userId)
                 .orElseThrow(() -> new RuntimeException("Usuário não encontrado com id: " + userId));
-        var review = reviewRepository.findById(reviewId)
+        ReviewModel review = reviewRepository.findById(reviewId)
                 .orElseThrow(() -> new RuntimeException("Review não encontrada com id: " + reviewId));
-        var reacaoExistente = reacaoRepository.findByUserIdAndReviewId(userId, reviewId);
+        Optional<ReacaoModel> reacaoExistente = reacaoRepository.findByUserIdAndReviewId(userId, reviewId);
         if (reacaoExistente.isPresent()) {
             ReacaoModel reacao = reacaoExistente.get();
             reacao.setNota(nota);
@@ -43,7 +46,6 @@ public class ReacaoService {
                     .review(review)
                     .nota(nota)
                     .build();
-
             return reacaoRepository.save(reacao);
         } catch (Exception e) {
             throw new RuntimeException("Erro ao salvar avaliação: " + e.getMessage());
@@ -65,7 +67,7 @@ public class ReacaoService {
 
     public List<ReacaoModel> getAvaliacoesByReview(Long reviewId) {
         if (reviewId == null || reviewId <= 0) {
-            throw new IllegalArgumentException("ID inválido.");
+            throw new IllegalArgumentException("ID inválido");
         }
         try {
             return reacaoRepository.findByReviewId(reviewId);
@@ -76,11 +78,10 @@ public class ReacaoService {
 
     public List<ReacaoModel> getAvaliacoesByUser(Long userId) {
         if (userId == null || userId <= 0) {
-            throw new IllegalArgumentException("ID inválido.");
+            throw new IllegalArgumentException("ID inválido");
         }
         try {
             return reacaoRepository.findByUserId(userId);
-
         } catch (Exception e) {
             throw new RuntimeException("Erro ao buscar avaliações: " + e.getMessage());
         }
@@ -88,7 +89,7 @@ public class ReacaoService {
 
     public Double getMediaByReview(Long reviewId) {
         if (reviewId == null || reviewId <= 0) {
-            throw new IllegalArgumentException("ID inválido.");
+            throw new IllegalArgumentException("ID inválido");
         }
         try {
             Double media = reacaoRepository.calcularMediaByReviewId(reviewId);
