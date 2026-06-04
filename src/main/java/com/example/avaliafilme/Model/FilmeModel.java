@@ -4,6 +4,8 @@ import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -38,6 +40,7 @@ public class FilmeModel {
     @Column(name = "criado_em", updatable = false)
     private LocalDateTime dt_create;
 
+    @JsonIgnore
     @ManyToMany(mappedBy = "filmes")
     private List<ListaFilmesModel> listas;
 }
