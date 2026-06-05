@@ -21,7 +21,7 @@ public class PerfilModel {
     @Column(length = 255)
     private String biografia;
 
-    @Column(name = "foto_url", length = 500)
+    @Column(name = "foto_url", length = 10000)
     private String fotoUrl;
 
     @OneToOne
@@ -30,4 +30,7 @@ public class PerfilModel {
 
     @ManyToMany(mappedBy = "colaboradores")
     private List<ListaFilmesModel> listas;
+
+    @ManyToMany(mappedBy = "membros")
+    private List<GrupoModel> grupos;
 }
