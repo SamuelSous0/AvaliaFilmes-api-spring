@@ -40,7 +40,7 @@ public class GrupoService {
             throw new IllegalArgumentException("O grupo precisa ter um criador válido.");
         }
 
-        userRepository.findById(grupo.getCriador().getId())
+        userRepository.findById((long)grupo.getCriador().getId())
                 .orElseThrow(() -> new RuntimeException(
                         "Usuário não encontrado com id: " + grupo.getCriador().getId()));
         try {
