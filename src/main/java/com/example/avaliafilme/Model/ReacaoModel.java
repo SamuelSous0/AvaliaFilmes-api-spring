@@ -27,7 +27,7 @@ public class ReacaoModel {
     @JoinColumn(name = "perfil_id", nullable = false)
     private PerfilModel perfil;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "review_id", nullable = false)
     private ReviewModel review;
 
