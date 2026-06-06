@@ -12,16 +12,16 @@ import java.util.Optional;
 @Repository
 public interface ReacaoRepository extends JpaRepository<ReacaoModel, Long> {
 
-    List<ReacaoModel> findByReviewId(Long reviewId);
+    List<ReacaoModel> findByReview_Id(Long reviewId);
 
-    List<ReacaoModel> findByUserId(Long userId);
+    List<ReacaoModel> findByPerfil_Id(Long perfilId);
 
-    Optional<ReacaoModel> findByUserIdAndReviewId(Long userId, Long reviewId);
+    Optional<ReacaoModel> findByPerfil_IdAndReview_Id(Long perfilId, Long reviewId);
 
-    boolean existsByUserIdAndReviewId(Long userId, Long reviewId);
+    boolean existsByPerfil_IdAndReview_Id(Long perfilId, Long reviewId);
 
     @Query("SELECT AVG(r.nota) FROM ReacaoModel r WHERE r.review.id = :reviewId")
     Double calcularMediaByReviewId(@Param("reviewId") Long reviewId);
 
-    void deleteByUserIdAndReviewId(Long userId, Long reviewId);
+    void deleteByPerfil_IdAndReview_Id(Long perfilId, Long reviewId);
 }

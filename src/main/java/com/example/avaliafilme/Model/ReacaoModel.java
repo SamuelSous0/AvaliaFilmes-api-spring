@@ -3,13 +3,12 @@ package com.example.avaliafilme.Model;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
-
 import java.time.LocalDateTime;
 
 @Entity
 @Table(
     name = "reacoes",
-    uniqueConstraints = @UniqueConstraint(columnNames = {"user_id", "review_id"})
+    uniqueConstraints = @UniqueConstraint(columnNames = {"perfil_id", "review_id"})
 )
 @Data
 @NoArgsConstructor
@@ -18,15 +17,15 @@ import java.time.LocalDateTime;
 public class ReacaoModel {
 
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @Column(nullable = false)
-    private int nota; 
+    private int nota;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "user_id", nullable = false)
-    private UserModel user;
+    @JoinColumn(name = "perfil_id", nullable = false)
+    private PerfilModel perfil;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "review_id", nullable = false)
