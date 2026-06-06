@@ -34,7 +34,7 @@ public class ReacaoService {
                 .orElseThrow(() -> new RuntimeException("Usuário não encontrado com id: " + userId));
         ReviewModel review = reviewRepository.findById(reviewId)
                 .orElseThrow(() -> new RuntimeException("Review não encontrada com id: " + reviewId));
-        Optional<ReacaoModel> reacaoExistente = reacaoRepository.findByUserIdAndReviewId(userId, reviewId);
+        Optional<ReacaoModel> reacaoExistente = reacaoRepository.findByUser_IdAndReview_Id(userId, reviewId);
         if (reacaoExistente.isPresent()) {
             ReacaoModel reacao = reacaoExistente.get();
             reacao.setNota(nota);
@@ -54,11 +54,11 @@ public class ReacaoService {
 
     @Transactional
     public boolean removerAvaliacao(Long userId, Long reviewId) {
-        if (!reacaoRepository.existsByUserIdAndReviewId(userId, reviewId)) {
+        if (!reacaoRepository.existsByUser_IdAndReview_Id(userId, reviewId)) {
             return false;
         }
         try {
-            reacaoRepository.deleteByUserIdAndReviewId(userId, reviewId);
+            reacaoRepository.deleteByUser_IdAndReview_Id(userId, reviewId);
             return true;
         } catch (Exception e) {
             throw new RuntimeException("Erro ao remover avaliação: " + e.getMessage());
@@ -70,7 +70,7 @@ public class ReacaoService {
             throw new IllegalArgumentException("ID inválido");
         }
         try {
-            return reacaoRepository.findByReviewId(reviewId);
+            return reacaoRepository.findByReview_Id(reviewId);
         } catch (Exception e) {
             throw new RuntimeException("Erro ao buscar avaliações: " + e.getMessage());
         }
@@ -81,7 +81,7 @@ public class ReacaoService {
             throw new IllegalArgumentException("ID inválido");
         }
         try {
-            return reacaoRepository.findByUserId(userId);
+            return reacaoRepository.findByUser_Id(userId);
         } catch (Exception e) {
             throw new RuntimeException("Erro ao buscar avaliações: " + e.getMessage());
         }
