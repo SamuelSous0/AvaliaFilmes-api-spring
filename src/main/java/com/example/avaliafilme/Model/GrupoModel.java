@@ -30,7 +30,7 @@ public class GrupoModel {
     @JoinColumn(name = "criador_id")
     private UserModel criador;
 
-    @ManyToMany
+    @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(
         name = "grupo_membro",
         joinColumns = @JoinColumn(name = "grupo_id"),
@@ -39,7 +39,7 @@ public class GrupoModel {
     @Builder.Default
     private List<PerfilModel> membros = new ArrayList<>();
 
-    @ManyToMany
+    @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(
         name = "grupo_filme",
         joinColumns = @JoinColumn(name = "grupo_id"),
