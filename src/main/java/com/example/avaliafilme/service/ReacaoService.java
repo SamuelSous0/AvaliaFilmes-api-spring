@@ -35,7 +35,11 @@ public class ReacaoService {
 
         ReviewModel review = reviewRepository.findById(reviewId)
                 .orElseThrow(() -> new RuntimeException("Review não encontrada com id: " + reviewId));
+<<<<<<< HEAD
         Optional<ReacaoModel> reacaoExistente = reacaoRepository.findByPerfil_IdAndReview_Id(perfilId, reviewId);
+=======
+        Optional<ReacaoModel> reacaoExistente = reacaoRepository.findByPerfil_IdAndReview_Id(perfilId, reviewId);
+>>>>>>> main
         if (reacaoExistente.isPresent()) {
             ReacaoModel reacao = reacaoExistente.get();
             reacao.setNota(nota);
@@ -54,12 +58,21 @@ public class ReacaoService {
     }
 
     @Transactional
+<<<<<<< HEAD
     public boolean removerAvaliacao(Long perfilId, Long reviewId) {
         if (!reacaoRepository.existsByPerfil_IdAndReview_Id(perfilId, reviewId)) {
             return false;
         }
         try {
             reacaoRepository.deleteByPerfil_IdAndReview_Id(perfilId, reviewId);
+=======
+    public boolean removerAvaliacao(Long userId, Long reviewId) {
+        if (!reacaoRepository.existsByUser_IdAndReview_Id(userId, reviewId)) {
+            return false;
+        }
+        try {
+            reacaoRepository.deleteByUser_IdAndReview_Id(userId, reviewId);
+>>>>>>> main
             return true;
         } catch (Exception e) {
             throw new RuntimeException("Erro ao remover avaliação: " + e.getMessage());
@@ -82,7 +95,11 @@ public class ReacaoService {
             throw new IllegalArgumentException("ID inválido");
         }
         try {
+<<<<<<< HEAD
             return reacaoRepository.findByPerfil_Id(perfilId);
+=======
+            return reacaoRepository.findByUser_Id(userId);
+>>>>>>> main
         } catch (Exception e) {
             throw new RuntimeException("Erro ao buscar avaliações: " + e.getMessage());
         }
