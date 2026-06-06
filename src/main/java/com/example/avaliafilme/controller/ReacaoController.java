@@ -18,17 +18,17 @@ public class ReacaoController {
 
     @PostMapping("/avaliar")
     public ReacaoModel avaliar(
-            @RequestParam Long userId,
+            @RequestParam Long perfilId,
             @RequestParam Long reviewId,
             @RequestParam int nota) {
-        return reacaoService.avaliar(userId, reviewId, nota);
+        return reacaoService.avaliar(perfilId, reviewId, nota);
     }
 
     @DeleteMapping("/remover")
     public ResponseEntity.BodyBuilder removerAvaliacao(
-            @RequestParam Long userId,
+            @RequestParam Long perfilId,
             @RequestParam Long reviewId) {
-        boolean removed = reacaoService.removerAvaliacao(userId, reviewId);
+        boolean removed = reacaoService.removerAvaliacao(perfilId, reviewId);
         if (removed)
             return ResponseEntity.status(HttpStatus.OK);
         return ResponseEntity.status(HttpStatus.NOT_FOUND);
@@ -39,9 +39,9 @@ public class ReacaoController {
         return reacaoService.getAvaliacoesByReview(reviewId);
     }
 
-    @GetMapping("/user/{userId}")
-    public List<ReacaoModel> getAvaliacoesByUser(@PathVariable Long userId) {
-        return reacaoService.getAvaliacoesByUser(userId);
+    @GetMapping("/perfil/{perfilId}")
+    public List<ReacaoModel> getAvaliacoesByPerfil(@PathVariable Long perfilId) {
+        return reacaoService.getAvaliacoesByPerfil(perfilId);
     }
 
     @GetMapping("/review/{reviewId}/media")
