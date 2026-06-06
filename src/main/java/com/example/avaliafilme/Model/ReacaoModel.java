@@ -23,7 +23,7 @@ public class ReacaoModel {
     @Column(nullable = false)
     private int nota;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "perfil_id", nullable = false)
     private PerfilModel perfil;
 
