@@ -1,5 +1,6 @@
 package com.example.avaliafilme.Model;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
@@ -14,6 +15,7 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class GrupoModel {
 
     @Id
@@ -26,7 +28,7 @@ public class GrupoModel {
     @Column(length = 500)
     private String descricao;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "criador_id")
     private UserModel criador;
 
