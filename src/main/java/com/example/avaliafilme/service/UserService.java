@@ -1,20 +1,33 @@
 package com.example.avaliafilme.service;
 
+import org.springframework.beans.factory.annotation.Value;import org.springframework.context.annotation.Bean;
+
+import com.example.avaliafilme.Model.TokenRecuperacaoModel;
+import com.example.avaliafilme.Repository.TokenRecuperacaoRepository;
+import com.example.avaliafilme.dto.RedefinirSenhaDTO;
+import com.example.avaliafilme.dto.SolicitarRecuperacaoDTO;
+import org.springframework.transaction.annotation.Transactional;
+import java.time.LocalDateTime;
+import java.util.UUID;
 import com.example.avaliafilme.Model.UserModel;
 import com.example.avaliafilme.Repository.UserRepository;
 import com.example.avaliafilme.dto.UserRequestDTO;
 import com.example.avaliafilme.dto.UserResponseDTO;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
 @Service
+@RequiredArgsConstructor
 public class UserService {
 
-    @Autowired
-    UserRepository userRepository;
+    private final UserRepository userRepository;
+    private final PasswordEncoder passwordEncoder;
 
     public UserResponseDTO addUser(UserRequestDTO user) {
         if (user.getName() == null || user.getName().isBlank()) {
@@ -27,11 +40,15 @@ public class UserService {
             throw new IllegalArgumentException("A senha deve ter pelo menos 6 caracteres.");
         }
 
+        if (userRepository.existsByEmail(user.getEmail())) {
+        throw new RuntimeException("Este e-mail já está cadastrado.");
+        }
+
         try {
             UserModel newUser = new UserModel();
             newUser.setUsername(user.getName());
             newUser.setEmail(user.getEmail());
-            newUser.setPassword(user.getPassword());
+            newUser.setPassword(passwordEncoder.encode(user.getPassword()));
             newUser.setAge(user.getAge());
 
             UserModel userSaved = userRepository.save(newUser);
@@ -102,7 +119,7 @@ public class UserService {
 
             user.setUsername(data.getName());
             user.setEmail(data.getEmail());
-            user.setPassword(data.getPassword());
+            user.setPassword(passwordEncoder.encode(data.getPassword()));
             user.setAge(data.getAge());
 
             UserModel userUpdated = userRepository.save(user);
@@ -136,4 +153,62 @@ public class UserService {
             throw new RuntimeException("Erro ao deletar usuário com id " + id + ": " + e.getMessage());
         }
     }
+
+    public UserResponseDTO login(UserRequestDTO dto) {
+        UserModel user = userRepository.findByEmail(dto.getEmail())
+                .orElseThrow(() -> new RuntimeException("Usuário não encontrado"));
+
+        if (!passwordEncoder.matches(dto.getPassword(), user.getPassword())) {
+            throw new RuntimeException("Senha incorreta");
+        }
+
+        return new UserResponseDTO(
+                user.getId(),
+                user.getUsername(),
+                user.getEmail(),
+                user.getDt_create()
+        );
+     }
+
+        private final TokenRecuperacaoRepository tokenRecuperacaoRepository;
+        private final EmailService emailService;
+
+        @Value("${app.frontend-url}")
+        private String urlFrontend;
+
+        @Transactional
+        public void solicitarRecuperacao(SolicitarRecuperacaoDTO dto) {
+            userRepository.findByEmail(dto.getEmail()).ifPresent(usuario -> {
+                tokenRecuperacaoRepository.deleteByUsuarioAndUtilizadoEmIsNull(usuario);
+
+                String codigo = UUID.randomUUID().toString();
+
+                TokenRecuperacaoModel token = new TokenRecuperacaoModel();
+                token.setUsuario(usuario);
+                token.setCodigo(codigo);
+                token.setValidoAte(LocalDateTime.now().plusMinutes(15));
+
+                tokenRecuperacaoRepository.save(token);
+
+                emailService.enviarEmailRecuperacao(usuario.getEmail(), codigo);
+            });
+        }
+
+        @Transactional
+        public void redefinirSenha(RedefinirSenhaDTO dto) {
+            TokenRecuperacaoModel token = tokenRecuperacaoRepository
+                    .findByCodigoAndUtilizadoEmIsNull(dto.getCodigo())
+                    .orElseThrow(() -> new RuntimeException("Código inválido ou já utilizado."));
+
+            if (LocalDateTime.now().isAfter(token.getValidoAte())) {
+                throw new RuntimeException("Este link expirou. Solicite um novo.");
+            }
+
+            UserModel usuario = token.getUsuario();
+            usuario.setPassword(passwordEncoder.encode(dto.getNovaSenha()));
+            userRepository.save(usuario);
+
+            token.setUtilizadoEm(LocalDateTime.now());
+            tokenRecuperacaoRepository.save(token);
+        }
 }

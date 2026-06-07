@@ -1,0 +1,66 @@
+package com.example.avaliafilme.Model;
+
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import jakarta.persistence.*;
+import lombok.*;
+import org.hibernate.annotations.CreationTimestamp;
+
+import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
+
+@Entity
+@Table(name = "grupos")
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
+@JsonIgnoreProperties(ignoreUnknown = true)
+public class GrupoModel {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
+    @Column(nullable = false, length = 100)
+    private String nome;
+
+    @Column(length = 500)
+    private String descricao;
+
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "criador_id")
+    @JsonIgnoreProperties({"username", "email", "password", "age", "dt_create", "listas", "grupos", "hibernateLazyInitializer", "handler"})
+    private UserModel criador;
+
+    @ManyToMany(fetch = FetchType.EAGER)
+    @JoinTable(
+        name = "grupo_membro",
+        joinColumns = @JoinColumn(name = "grupo_id"),
+        inverseJoinColumns = @JoinColumn(name = "perfil_id")
+    )
+    @JsonIgnoreProperties({"listas", "grupos", "hibernateLazyInitializer", "handler"})
+    @Builder.Default
+    private List<PerfilModel> membros = new ArrayList<>();
+
+    @ManyToMany(fetch = FetchType.EAGER)
+    @JoinTable(
+        name = "grupo_filme",
+        joinColumns = @JoinColumn(name = "grupo_id"),
+        inverseJoinColumns = @JoinColumn(name = "filme_id")
+    )
+    @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
+    @Builder.Default
+    private List<FilmeModel> filmes = new ArrayList<>();
+
+    @CreationTimestamp
+    @Column(name = "criado_em", updatable = false)
+    private LocalDateTime dt_create;
+
+    @PostLoad
+    @PrePersist
+    private void init() {
+        if (membros == null) membros = new ArrayList<>();
+        if (filmes == null) filmes = new ArrayList<>();
+    }
+}

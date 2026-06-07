@@ -67,4 +67,18 @@ public class ListaFilmesController {
     public ResponseEntity<List<String>> buscarFilmes(@PathVariable Long id) {
         return ResponseEntity.ok(listaService.buscarFilmesDaLista(id));
     }
+
+    @DeleteMapping("/{id}/filmes/{filmeId}")
+    public ResponseEntity<ListaResponseDTO> removerFilme(
+            @PathVariable Long id,
+            @PathVariable Long filmeId) {
+        return ResponseEntity.ok(listaService.removerFilme(id, filmeId));
+    }
+
+    @DeleteMapping("/{id}/colaboradores/{perfilId}")
+    public ResponseEntity<ListaResponseDTO> removerColaborador(
+            @PathVariable Long id,
+            @PathVariable Long perfilId) {
+        return ResponseEntity.ok(listaService.removerColaborador(id, perfilId));
+    }
 }

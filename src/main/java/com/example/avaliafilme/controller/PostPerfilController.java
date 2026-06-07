@@ -1,8 +1,7 @@
 package com.example.avaliafilme.controller;
 
-import com.example.avaliafilme.Model.PerfilModel;
 import com.example.avaliafilme.Model.PostPerfilModel;
-import com.example.avaliafilme.PostPerfilService;
+import com.example.avaliafilme.service.PostPerfilService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -27,7 +26,7 @@ public class PostPerfilController {
     @GetMapping("/{id}")
     public ResponseEntity<PostPerfilModel> buscarporId(@PathVariable Long id){
         return service.buscarporId(id)
-                .map(ResponseEntity::ok).orElse(ResponseEntity.NOT_FOUND().build());
+                .map(ResponseEntity::ok).orElse(ResponseEntity.notFound().build());
     }
     @PostMapping
     public PostPerfilModel criar (@RequestBody PostPerfilModel postPerfil){
@@ -38,10 +37,10 @@ public class PostPerfilController {
         try{
             return ResponseEntity.ok(service.atualizar(id, dadosAtt));    
         } catch(RuntimeException e) {
-            return ResponseEntity.NOT_FOUND().build();
+            return ResponseEntity.notFound().build();
         }
     }
-    @DeleteMapping("{id}")
+    @DeleteMapping("/{id}")
     public ResponseEntity<Void> deletar(@PathVariable Long id){
         service.deletar(id);
         return ResponseEntity.noContent().build();
