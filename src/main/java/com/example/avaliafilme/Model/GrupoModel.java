@@ -30,6 +30,7 @@ public class GrupoModel {
 
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "criador_id")
+    @JsonIgnoreProperties({"listas", "grupos", "hibernateLazyInitializer", "handler"})
     private UserModel criador;
 
     @ManyToMany(fetch = FetchType.EAGER)
@@ -38,6 +39,7 @@ public class GrupoModel {
         joinColumns = @JoinColumn(name = "grupo_id"),
         inverseJoinColumns = @JoinColumn(name = "perfil_id")
     )
+    @JsonIgnoreProperties({"listas", "grupos", "hibernateLazyInitializer", "handler"})
     @Builder.Default
     private List<PerfilModel> membros = new ArrayList<>();
 
@@ -47,6 +49,7 @@ public class GrupoModel {
         joinColumns = @JoinColumn(name = "grupo_id"),
         inverseJoinColumns = @JoinColumn(name = "filme_id")
     )
+    @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
     @Builder.Default
     private List<FilmeModel> filmes = new ArrayList<>();
 
