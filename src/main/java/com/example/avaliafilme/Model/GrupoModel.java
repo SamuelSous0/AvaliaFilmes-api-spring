@@ -30,7 +30,7 @@ public class GrupoModel {
 
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "criador_id")
-    @JsonIgnoreProperties({"listas", "grupos", "hibernateLazyInitializer", "handler"})
+    @JsonIgnoreProperties({"username", "email", "password", "age", "dt_create", "listas", "grupos", "hibernateLazyInitializer", "handler"})
     private UserModel criador;
 
     @ManyToMany(fetch = FetchType.EAGER)
