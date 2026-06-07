@@ -1,6 +1,7 @@
 package com.example.avaliafilme.controller;
 
 import com.example.avaliafilme.Model.PerfilModel;
+import com.example.avaliafilme.Model.PostPerfilModel;
 import com.example.avaliafilme.PostPerfilService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -13,6 +14,11 @@ import java.util.List;
 public class PostPerfilController {
     @Autowired
     private PostPerfilService service;
+
+    @GetMapping
+    public List<PostPerfilModel> listarTodos(){
+        return service.listarTodos();
+    }
 
     @GetMapping("/perfil/{perfilId}")
     public List<PostPerfilModel> listarPorPerfil(@PathVariable Long perfilId){
