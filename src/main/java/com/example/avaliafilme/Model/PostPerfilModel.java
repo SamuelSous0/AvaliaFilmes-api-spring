@@ -5,7 +5,7 @@ import com.example.avaliafilme.Model.PerfilModel;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
-
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import java.time.LocalDateTime;;
 
 @Entity
@@ -28,6 +28,7 @@ public class PostPerfilModel{
 
     @ManyToOne
     @JoinColumn( name = "perfil_id")
+    @JsonIgnoreProperties({"user", "listas", "grupos", "biografia", "fotoUrl"})
     private PerfilModel perfil;
 
     @ManyToOne
