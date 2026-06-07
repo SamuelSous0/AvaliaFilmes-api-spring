@@ -18,6 +18,12 @@ public class PostPerfilService{
     @Autowired
     private PostPerfilRepository repository;
 
+    @Autowired
+    private PerfilRepository perfilRepository;
+
+    @Autowired
+    private FilmeRepository filmeRepository;
+
     public List<PostPerfilModel> listarTodos(){
         return repository.findAll();
     }
@@ -28,10 +34,17 @@ public class PostPerfilService{
         return repository.findById(id);
     }
     public PostPerfilModel criar(PostPerfilModel postPerfil){
-        PerfilModel perfil = PerfilRepository.getReferenceById(postPerfil.getPerfil().getId());
-        FilmeModel filme = FilmeRepository.getReferenceById(postPerfil.getFilme().getId());
+        PerfilModel perfil = perfilRepository.findById(
+            postPerfil.getPerfil().getId()
+        ).orElseThrow(() -> new RuntimeException("Perfil não encontrado."));
+
+        FilmeModel filme = filmeRepository.findById(
+            postPerfil.getFilme().getId()
+        ).orElseThrow(() -> new RuntimeException("Filme não encontrado."));
+        
         postPerfil.setPerfil(perfil);
         postPerfil.setFilme(filme);
+
         return repository.save(postPerfil);  
     }
     public PostPerfilModel atualizar (Long id, PostPerfilModel dadosAtt){
@@ -40,6 +53,7 @@ public class PostPerfilService{
         
             post.setDescricao(dadosAtt.getDescricao());
             post.setFilme(dadosAtt.getFilme());
+            
             return repository.save(post);
     }
     public void deletar(Long id){
