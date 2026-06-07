@@ -28,7 +28,7 @@ public class FilmeModel {
     private String genero;
 
     @Column(nullable = false)
-    private int anoLancamento;
+    private Integer anoLancamento;
 
     @Column(nullable = false, length = 100)
     private String diretor;
