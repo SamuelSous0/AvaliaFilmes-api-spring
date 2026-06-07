@@ -56,4 +56,11 @@ public class GrupoModel {
     @CreationTimestamp
     @Column(name = "criado_em", updatable = false)
     private LocalDateTime dt_create;
+
+    @PostLoad
+    @PrePersist
+    private void init() {
+        if (membros == null) membros = new ArrayList<>();
+        if (filmes == null) filmes = new ArrayList<>();
+    }
 }
