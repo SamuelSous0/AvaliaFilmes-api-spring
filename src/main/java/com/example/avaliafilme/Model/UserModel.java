@@ -28,7 +28,7 @@ public class UserModel {
     private String password;
 
     @Column(nullable = false)
-    private int age;
+    private Integer age;
 
     @CreationTimestamp
     @Column(name = "criado_em", updatable = false)
