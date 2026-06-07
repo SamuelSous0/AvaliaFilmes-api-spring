@@ -1,6 +1,10 @@
 package com.example.avaliafilme.service;
 
+import com.example.avaliafilme.Model.FilmeModel;
+import com.example.avaliafilme.Model.PerfilModel;
 import com.example.avaliafilme.Model.PostPerfilModel;
+import com.example.avaliafilme.Repository.FilmeRepository;
+import com.example.avaliafilme.Repository.PerfilRepository;
 import com.example.avaliafilme.Repository.PostPerfilRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -24,7 +28,11 @@ public class PostPerfilService{
         return repository.findById(id);
     }
     public PostPerfilModel criar(PostPerfilModel postPerfil){
-        return repository.save(postPerfil);
+        PerfilModel perfil = PerfilRepository.getReferenceById(postPerfil.getPerfil().getId());
+        FilmeModel filme = FilmeRepository.getReferenceById(postPerfil.getFilme().getId());
+        postPerfil.setPerfil(perfil);
+        postPerfil.setFilme(filme);
+        return repository.save(postPerfil);  
     }
     public PostPerfilModel atualizar (Long id, PostPerfilModel dadosAtt){
         PostPerfilModel post = repository.findById(id)
