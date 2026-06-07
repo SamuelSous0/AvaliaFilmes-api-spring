@@ -15,6 +15,7 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
+@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 public class ReacaoModel {
 
     @Id
@@ -24,14 +25,14 @@ public class ReacaoModel {
     @Column(nullable = false)
     private int nota;
 
-    @ManyToOne(fetch = FetchType.EAGER)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "perfil_id", nullable = false)
     @JsonIgnoreProperties({"listas", "grupos", "hibernateLazyInitializer", "handler"})
     private PerfilModel perfil;
 
-    @ManyToOne(fetch = FetchType.EAGER)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "review_id", nullable = false)
-    @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
+    @JsonIgnoreProperties({"perfil", "filme", "hibernateLazyInitializer", "handler"})
     private ReviewModel review;
 
     @CreationTimestamp
