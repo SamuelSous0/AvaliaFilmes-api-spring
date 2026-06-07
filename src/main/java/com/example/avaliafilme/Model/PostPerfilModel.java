@@ -16,7 +16,7 @@ import java.time.LocalDateTime;;
 @Builder
 public class PostPerfilModel{
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTIFY)
     private Long id;
 
     @Column(length= 500)
