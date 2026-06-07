@@ -1,5 +1,6 @@
 package com.example.avaliafilme.Model;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
@@ -25,10 +26,12 @@ public class ReacaoModel {
 
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "perfil_id", nullable = false)
+    @JsonIgnoreProperties({"listas", "grupos", "hibernateLazyInitializer", "handler"})
     private PerfilModel perfil;
 
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "review_id", nullable = false)
+    @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
     private ReviewModel review;
 
     @CreationTimestamp
