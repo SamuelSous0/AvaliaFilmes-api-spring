@@ -16,7 +16,7 @@ import java.time.LocalDateTime;;
 @Builder
 public class PostPerfilModel{
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTIFY)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @Column(length= 500)
@@ -28,10 +28,11 @@ public class PostPerfilModel{
 
     @ManyToOne
     @JoinColumn( name = "perfil_id")
-    @JsonIgnoreProperties({"user", "listas", "grupos", "biografia", "fotoUrl"})
+    @JsonIgnoreProperties({"user", "listas", "grupos", "biografia", "fotoUrl", "hibernateLazyInitializer", "handler"})
     private PerfilModel perfil;
 
     @ManyToOne
     @JoinColumn(name = "filme_id")
+    @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
     private FilmeModel filme;
 }
