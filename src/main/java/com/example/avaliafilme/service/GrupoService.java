@@ -29,26 +29,18 @@ public class GrupoService {
     FilmeRepository filmeRepository;
 
     public GrupoModel addGrupo(GrupoModel grupo) {
-
-        if (grupo.getNome() == null || grupo.getNome().isBlank()) {
-            throw new IllegalArgumentException("O nome do grupo não pode ser vazio.");
-        }
-        if (grupo.getCriador() == null) {
-            throw new IllegalArgumentException("O grupo precisa ter um criador.");
-        }
-        if (grupo.getCriador().getId() <= 0) {
-            throw new IllegalArgumentException("O grupo precisa ter um criador válido.");
-        }
-
-        userRepository.findById((long)grupo.getCriador().getId())
-                .orElseThrow(() -> new RuntimeException(
-                        "Usuário não encontrado com id: " + grupo.getCriador().getId()));
-        try {
-            return grupoRepository.save(grupo);
-        } catch (Exception e) {
-            throw new RuntimeException("Erro ao salvar grupo: " + e.getMessage());
-        }
+    if (grupo.getNome() == null || grupo.getNome().isBlank()) {
+        throw new IllegalArgumentException("O nome do grupo não pode ser vazio");
     }
+    if (grupo.getCriador() == null) {
+        throw new IllegalArgumentException("O grupo precisa ter um criador");
+    }
+    try {
+        return grupoRepository.save(grupo);
+    } catch (Exception e) {
+        throw new RuntimeException("Erro ao salvar grupo: " + e.getMessage());
+    }
+}
 
     public List<GrupoModel> getAllGrupos() {
         try {
