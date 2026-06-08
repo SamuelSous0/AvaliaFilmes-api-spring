@@ -1,7 +1,5 @@
 package com.example.avaliafilme.service;
 
-import java.util.ArrayList;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -24,6 +22,17 @@ public class PerfilService {
     @Autowired
     private UserRepository userRepository;
 
+    private PerfilResponseDTO toResponseDTO(PerfilModel perfil) {
+        UserModel user = perfil.getUser();
+
+        return new PerfilResponseDTO(
+                perfil.getId(),
+                user != null ? user.getId() : null,
+                perfil.getBiografia(),
+                perfil.getFotoUrl(),
+                user != null ? user.getUsername() : null);
+    }
+
     public PerfilResponseDTO addPerfil(PerfilRequestDTO perfilDto) {
 
         UserModel user = userRepository.findById(perfilDto.getUserId())
@@ -36,9 +45,7 @@ public class PerfilService {
 
         PerfilModel perfilGuardado = perfilRepository.save(novoPerfil);
 
-        return new PerfilResponseDTO(perfilGuardado.getId(), perfilGuardado.getBiografia(), perfilGuardado.getFotoUrl(),
-                perfilGuardado.getUser().getUsername());
-
+        return toResponseDTO(perfilGuardado);
     }
 
     public List<PerfilResponseDTO> getAllPerfis() {
@@ -46,7 +53,7 @@ public class PerfilService {
         List<PerfilResponseDTO> response = new ArrayList<>();
 
         for (PerfilModel p : perfilLista) {
-            response.add(new PerfilResponseDTO(p.getId(), p.getBiografia(), p.getFotoUrl(), p.getUser().getUsername()));
+            response.add(toResponseDTO(p));
         }
         return response;
     }
@@ -55,7 +62,7 @@ public class PerfilService {
         PerfilModel p = perfilRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Perfil não encontrado com o id: " + id));
 
-        return new PerfilResponseDTO(p.getId(), p.getBiografia(), p.getFotoUrl(), p.getUser().getUsername());
+        return toResponseDTO(p);
     }
 
     public boolean deletePerfil(Long id) {
@@ -79,10 +86,6 @@ public class PerfilService {
 
         PerfilModel perfilAtualizado = perfilRepository.save(perfil);
 
-        return new PerfilResponseDTO(
-                perfilAtualizado.getId(),
-                perfilAtualizado.getBiografia(),
-                perfilAtualizado.getFotoUrl(),
-                perfilAtualizado.getUser().getUsername());
+        return toResponseDTO(perfilAtualizado);
     }
 }

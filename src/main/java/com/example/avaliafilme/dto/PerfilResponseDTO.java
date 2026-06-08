@@ -11,6 +11,7 @@ import lombok.Setter;
 public class PerfilResponseDTO {
 
     private long id;
+    private Long userId;
     private String biografia;
     private String fotoUrl;
     private String username;
