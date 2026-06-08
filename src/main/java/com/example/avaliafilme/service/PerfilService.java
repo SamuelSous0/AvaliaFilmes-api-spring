@@ -65,4 +65,24 @@ public class PerfilService {
         }
         return false;
     }
+
+    public PerfilResponseDTO updatePerfil(Long id, PerfilRequestDTO perfilDto) {
+        PerfilModel perfil = perfilRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Perfil não encontrado com o id: " + id));
+
+        if (perfilDto.getBiografia() != null) {
+            perfil.setBiografia(perfilDto.getBiografia());
+        }
+        if (perfilDto.getFotoUrl() != null) {
+            perfil.setFotoUrl(perfilDto.getFotoUrl());
+        }
+
+        PerfilModel perfilAtualizado = perfilRepository.save(perfil);
+
+        return new PerfilResponseDTO(
+                perfilAtualizado.getId(),
+                perfilAtualizado.getBiografia(),
+                perfilAtualizado.getFotoUrl(),
+                perfilAtualizado.getUser().getUsername());
+    }
 }
