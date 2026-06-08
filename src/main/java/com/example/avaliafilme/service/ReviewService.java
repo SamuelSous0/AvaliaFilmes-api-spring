@@ -10,6 +10,7 @@ import com.example.avaliafilme.dto.ReviewRequestDTO;
 import com.example.avaliafilme.dto.ReviewResponseDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -44,12 +45,14 @@ public class ReviewService {
         return converterParaResponseDTO(salva);
     }
 
+    @Transactional(readOnly = true)
     public List<ReviewResponseDTO> listarTodas() {
         return reviewRepository.findAll().stream()
                 .map(this::converterParaResponseDTO)
                 .collect(Collectors.toList());
     }
 
+    @Transactional(readOnly = true)
     public List<ReviewResponseDTO> listarPorFilme(Long filmeId) {
         return reviewRepository.findByFilmeId(filmeId).stream()
                 .map(this::converterParaResponseDTO)
