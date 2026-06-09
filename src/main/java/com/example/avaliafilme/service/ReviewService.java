@@ -11,6 +11,8 @@ import com.example.avaliafilme.dto.ReviewResponseDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.server.ResponseStatusException;
+import org.springframework.http.HttpStatus;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -57,6 +59,44 @@ public class ReviewService {
         return reviewRepository.findByFilmeId(filmeId).stream()
                 .map(this::converterParaResponseDTO)
                 .collect(Collectors.toList());
+    }
+
+    @Transactional
+    public ReviewResponseDTO atualizarReview(Long id, ReviewRequestDTO request) {
+        ReviewModel review = reviewRepository.findById(id)
+        .orElseThrow(() -> new ResponseStatusException(
+                HttpStatus.NOT_FOUND,
+                "Review não encontrada"
+        ));
+
+        if (request.getFilmeId() != null) {
+            FilmeModel filme = filmeRepository.findById(request.getFilmeId())
+                    .orElseThrow(() -> new ResponseStatusException(
+                            HttpStatus.NOT_FOUND,
+                            "Filme não encontrado"
+                    ));
+            review.setFilme(filme);
+        }
+
+        if (request.getPerfilId() != null) {
+            PerfilModel perfil = perfilRepository.findById(request.getPerfilId())
+        .orElseThrow(() -> new ResponseStatusException(
+                HttpStatus.NOT_FOUND,
+                "Perfil não encontrado"
+        ));
+            review.setPerfil(perfil);
+        }
+
+        if (request.getNota() != null) {
+            review.setNota(request.getNota());
+        }
+
+        if (request.getComentario() != null) {
+            review.setComentario(request.getComentario());
+        }
+
+        ReviewModel atualizada = reviewRepository.save(review);
+        return converterParaResponseDTO(atualizada);
     }
 
     public void deletarReview(Long id) {
